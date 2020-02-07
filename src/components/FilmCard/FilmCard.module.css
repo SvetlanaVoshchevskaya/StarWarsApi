@@ -1,0 +1,19 @@
+.filmTitle {
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #0052cc;
+}
+.filmDetail {
+  color: #0052cc;
+}
+
+.mainDetail {
+  text-align: center;
+}
+.mainDetail > div {
+  margin-top: 5px;
+}
+.extraDetails {
+  margin-right: 5px;
+}
