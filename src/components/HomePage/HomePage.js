@@ -68,7 +68,7 @@ class Home extends Component {
             <ul className={s.filmsList}>
               {films.map((film, idx) => (
                 <li key={idx} className={s.filmItem}>
-                  <Link to={`films/${idx + 1}`}>
+                  <Link to={`films/${idx}`}>
                     <p>{film.title}</p>
                   </Link>
                 </li>

@@ -8,7 +8,7 @@ class FilmCard extends Component {
   state = { film: null, characters: [] };
 
   componentDidMount() {
-    const id = +this.props.match.params.id + 1;
+    const id = +this.props.match.params.id;
     this.fetchFilmDetail(id);
   }
 
