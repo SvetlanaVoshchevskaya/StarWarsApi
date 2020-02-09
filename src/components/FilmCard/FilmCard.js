@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
-import url from '../services/url';
+import url from '../../services/url';
 import Loader from '../Loader/Loader';
 import s from './FilmCard.module.css';
 
 class FilmCard extends Component {
-  state = { film: null, characters: [] };
+  state = { film: [], characters: [] };
 
   componentDidMount() {
     const id = +this.props.match.params.id;
-    this.fetchFilmDetail(id);
+    const filtredFilm = this.props.films.find((film, idx) => {
+      if (idx === id) {
+        return film;
+      }
+    });
+    this.setState(
+      {
+        film: filtredFilm
+      },
+      () => {
+        this.fetchExtraParam(this.state.film.characters);
+      }
+    );
   }
-
-  fetchFilmDetail = async (id) => {
-    await axios
-      .get(url + id)
-      .then((data) => {
-        this.setState({ film: data.data }, () => {
-          this.fetchExtraParam(this.state.film.characters);
-        });
-      })
-      .catch((error) => error);
-  };
 
   fetchExtraParam = (arr) => {
     const request = arr.map((el) => axios.get(el));
@@ -32,9 +34,10 @@ class FilmCard extends Component {
 
   render() {
     const { film, characters } = this.state;
+    const { isLoading } = this.props;
     return (
       <>
-        {!film && <Loader />}
+        {isLoading && <Loader />}
         {film && (
           <div>
             <h2 className={s.filmTitle}>{film.title} </h2>
@@ -67,4 +70,9 @@ class FilmCard extends Component {
     );
   }
 }
-export default FilmCard;
+
+const MSTP = (state) => ({
+  isLoading: state.isLoading,
+  films: state.films
+});
+export default connect(MSTP)(FilmCard);
