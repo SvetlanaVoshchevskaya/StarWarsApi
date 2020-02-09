@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
-import s from "./Search.module.css";
+import s from './Search.module.css';
+import { connect } from 'react-redux';
+import { addValue } from '../../redux/action';
+import { fetchFilms } from '../../redux/action';
+import url from '../../services/url';
 
 class Search extends Component {
-  state = { value: "" };
+  state = {};
 
-  handleChange = e => {
-    this.setState({ value: e.target.value }, () => {
-      this.props.upDateValue(this.state.value);
-    });
+  handleChange = (e) => {
+    this.props.addValue(e.target.value);
+    if (e.target.value === '') {
+      this.props.fetchFilms(url);
+    }
   };
 
   render() {
-    const { value } = this.state;
+    const { value } = this.props;
     return (
       <input
         id="search"
@@ -24,5 +29,8 @@ class Search extends Component {
     );
   }
 }
-
-export default Search;
+const MDTP = (dispatch) => ({
+  addValue: (value) => dispatch(addValue(value)),
+  fetchFilms: (url) => dispatch(fetchFilms(url))
+});
+export default connect(null, MDTP)(Search);
