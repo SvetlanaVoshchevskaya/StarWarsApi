@@ -1,29 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import url from '../../services/url';
 import Loader from '../Loader/Loader';
 import s from './FilmCard.module.css';
 
 class FilmCard extends Component {
-  state = { film: [], characters: [] };
+  state = { film: [] };
 
   componentDidMount() {
     const id = +this.props.match.params.id;
+    const { film } = this.state;
     const filtredFilm = this.props.films.find((film, idx) => {
       if (idx === id) {
         return film;
       }
     });
+
     this.setState(
       {
         film: filtredFilm
       },
       () => {
-        this.fetchExtraParam(this.state.film.characters);
+        Object.entries(this.state.film).forEach(([key, value]) => {
+          if (typeof value !== 'number' && typeof value !== 'string') {
+            this.setState({ [key]: value });
+          }
+        });
       }
     );
   }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log(this.state);
+  //   if (this.state.hasOwnProperty(this.state.characters)) {
+  //     this.fetchExtraParam(this.state.characters);
+  //   }
+  // }
 
   fetchExtraParam = (arr) => {
     const request = arr.map((el) => axios.get(el));
@@ -57,11 +69,15 @@ class FilmCard extends Component {
               </div>
               <div>
                 Characters:
-                {characters.map((character) => (
-                  <span key={character.data.name} className={s.extraDetails}>
-                    {character.data.name},
-                  </span>
-                ))}
+                {characters > 0 &&
+                  characters.map((character) => (
+                    <span
+                      key={character.data.data.name}
+                      className={s.extraDetails}
+                    >
+                      {character.data.data.name},
+                    </span>
+                  ))}
               </div>
             </div>
           </div>
